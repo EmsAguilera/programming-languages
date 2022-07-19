@@ -29,7 +29,7 @@ This is how we are planning on implementing it:
 
 So we will be receiving an image, which we will then convert into pixel values. These pixel values are ordered in Red, Green and Blue (RGB). 
 
-We are going to create a scrambling process, by which we define how many times every pixel is going to change and what values they are changing to. In doing that, the process will be repeated several times, and by the time the process is done, the image should become unrecognizable. 
+We are going to create a scrambling process, by which we define how many times every pixel is going to change and what values they are changing to. While doing that, the process will be repeated several times, and by the time the process is done, the image should become unrecognizable. 
 
 The unscrambling process will be doing the same changing pixel values, but in a reverse order. So it will be like doing a step back in the scrambling process. And whenever the process is done, the image should be the same one we started with. 
 
@@ -44,6 +44,7 @@ https://docs.racket-lang.org/teachpack/image.html.
 
 **Images:  "image.rkt":**
 https://docs.racket-lang.org/teachpack/2htdpimage.html#%28def._%28%28lib._2htdp%2Fimage..rkt%29._circle%29%29
+
 **Image guide:**
 https://docs.racket-lang.org/teachpack/2htdpimage-guide.html
 

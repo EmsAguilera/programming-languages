@@ -27,7 +27,9 @@ We decided to use Racket for this project since it seemed the most friendly when
 This is how we are planning on implementing it: 
 
 
-So we will be receiving an image, which we will then convert into pixel values. These pixel values are ordered in Red, Green and Blue (RGB). 
+So we will be receiving an image, which will then converted into pixel values. These pixel values are ordered in Red, Green and Blue (RGB), and are given as a list of colors as RGB values. We can also select which specific pixel to see from that list, and we can then turn back that list of values into the image. 
+
+
 
 We are going to create a scrambling process, by which we define how many times every pixel is going to change and what values they are changing to. While doing that, the process will be repeated several times, and by the time the process is done, the image should become unrecognizable. 
 

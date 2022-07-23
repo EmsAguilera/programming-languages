@@ -33,8 +33,9 @@ So we will be receiving an image, which will then converted into pixel values. T
 
 We are going to create a scrambling process, by which we define how many times every pixel is going to change and what values they are changing to. While doing that, the process will be repeated several times, and by the time the process is done, the image should become unrecognizable. 
 
-The unscrambling process will be doing the same changing pixel values, but in a reverse order. So it will be like doing a step back in the scrambling process. And whenever the process is done, the image should be the same one we started with. 
+![image](https://user-images.githubusercontent.com/44979133/180587087-6e9c5972-ecc3-4211-9a75-2fd2ab022a4b.png)
 
+The unscrambling process will be doing the same changing pixel values, but in a reverse order. So it will be like doing a step back in the scrambling process. And whenever the process is done, the image should be the same one we started with. 
 
 
 

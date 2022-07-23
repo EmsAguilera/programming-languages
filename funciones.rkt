@@ -1,3 +1,14 @@
+#|
+First advance of project
+
+It encripts an image calling each function
+We still have to put all together 
+
+Emilio Aguilera 
+Emmanuel Bautista
+|#
+
+
 #lang racket
 
 

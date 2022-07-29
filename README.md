@@ -43,7 +43,16 @@ The unscrambling process will be doing the same changing pixel values, but in a 
 
 First, our program is used with the main function:
 
-![image](https://user-images.githubusercontent.com/71990835/181689511-5bf49729-0faf-493e-8bb3-5d823ff94da9.png)
+```
+; This main function receives the name of the image and a name in which it will be saved. 
+
+(define (main in-filename out-filename flag)
+  (define my-image (bitmap/file in-filename))
+    (if (eq? flag #t)
+      (save-image (do_scramble my-image) out-filename)
+      (save-image (do_unscramble my-image) out-filename)))
+
+```
 
 In which we receive as arguments the name of the file we wish to scramble, the name in which we want to save the scrambled image and a boolean that will tell the program to either scramble or unscramble (true = scramble, false = unscramble). 
 
@@ -55,20 +64,51 @@ In addition to that, we have an if statement, where we determine whether to scra
 Now, on to the scrambling process. 
 This is done with a few functions. The key functions are these:  
 
-![image](https://user-images.githubusercontent.com/71990835/181690525-fd435dc5-0a09-4aa7-b522-5a3c832954f5.png)
+```
+; Operation functions 
+(define (mult-mod x y z)
+  (remainder (* x y) z))
+
+(define (obscure-intensity n c)
+ (sub1 (mult-mod(add1 n) c 257))) 
+ 
+ ```
 
 These are the arithmetic operations done to each RGB color of the image. These functions are basically there to further encrypt the image´s pixel values.
 
 As for the RGB values, these are changed with the following functions: 
 
-<img width="421" alt="image" src="https://user-images.githubusercontent.com/71990835/181690821-8b5f4cc3-0270-4b41-ae47-d8d9b40c9c38.png">
+```
+; Scramble of reds
+(define (scramble-red img)
+  (for/image([old img])
+    (red+color (obscure-intensity (color-red old) 31)old)))
+
+; Scramble of blues
+(define (scramble-blue img)
+  (for/image([old img])
+    (blue+color (obscure-intensity (color-blue old) 31)old)))
+
+; Scramble of greens
+(define (scramble-green img)
+  (for/image([old img])
+    (green+color (obscure-intensity (color-green old) 31)old)))
+    
+```
 
 For each color in our image, we change the redness of the old image by obscuring it´s intensity, basically multiplying its intensity by 31 and then taking the remainder modulo of 257. 
 This process is done for each color in our image (Red-Green-Blue). Each function using the previous version of the image, thus scrambling it. 
 
 These functions are called by our do_scramble function: 
 
-![image](https://user-images.githubusercontent.com/71990835/181691614-8e5e2ea2-44c0-499c-be76-36996add8621.png)
+```
+
+; Function that does all the scramble
+(define (do_scramble img)
+  (scramble-green (scramble-red (scramble-blue img))))
+
+```
+
 
 Which is called by our main function. 
 
@@ -76,15 +116,93 @@ Which is called by our main function.
 
 To unscramble an image, we use the following functions:  
 
-![image](https://user-images.githubusercontent.com/71990835/181691931-4f56bbb8-46be-448a-8cd5-5772b9d5420c.png)
+```
+; Unscramble of blues
+(define (unscramble-blue img)
+  (for/image([old img])
+    (blue+color (obscure-intensity (color-blue old) 199)old)))
+
+; Unscramble of reds
+(define (unscramble-red img)
+  (for/image([old img])
+    (red+color (obscure-intensity (color-red old) 199)old)))
+
+; Unscramble of greens
+(define (unscramble-green img)
+  (for/image([old img])
+    (green+color (obscure-intensity (color-green old) 199)old)))
+```
 
 Which are basically the reverse of the previous scramble functions. We begin with the last state of the image, and change the intensity of the blue color by multiplying it by 199. Then using the current state of the image nad changing the red color values, and so on. 
 
 These functions are called by the do_unscramble function:
 
-![image](https://user-images.githubusercontent.com/71990835/181692698-d0117b1b-b877-4384-89ce-aa331dbe68a0.png)
+```
+; Function that does all the unscramble
+(define (do_unscramble img)
+  (unscramble-green (unscramble-blue (unscramble-red img))))
+```
 
 Which is called by our main function when needed. 
+
+## How to run
+
+To compile and run the program, run the following command in the path where the project is saved.
+
+```
+racket -it scramble_project.rkt
+
+```
+Press enter and, if done succesfully, the terminal will show you are in interactive mode in racket.
+
+![image](https://user-images.githubusercontent.com/71990835/181807343-4ec25e6f-e4d4-402f-9ba0-f6c2f1f41ba3.png)
+
+
+Once there, run the main function with the first argument being the path of the image you want to scramble, the second being the path of where you want to save it, and the third a True value.
+
+```
+
+(main "data/dog.jpg" "results/out.jpg" #t)
+
+```
+
+This will return True, showing it worked.
+
+![image](https://user-images.githubusercontent.com/71990835/181808329-efb8b4f8-77ea-49a5-bdd5-1192a35f1df4.png)
+
+![image](https://user-images.githubusercontent.com/71990835/181808526-cac17a8d-34f8-40b9-9e33-ea98a6ad1717.png)
+
+![image](https://user-images.githubusercontent.com/71990835/181808422-c61fb773-570b-4140-8972-8de4518d642d.png)
+
+To  unscramble the image, call the main function again, receiving as arguments the image you want to unscramble, the path where it will be saved and a False value, to signal it will be unscrambled.
+
+```
+
+(main "results/out.jpg" "results/normalDog.jpg" #f)
+
+```
+It will return True, showing it worked. 
+
+![image](https://user-images.githubusercontent.com/71990835/181810923-828ae437-3860-4faf-8fe7-e2a623806b2a.png)
+
+<img width="259" alt="image" src="https://user-images.githubusercontent.com/71990835/181810973-4d31ac5e-3379-45aa-8557-a19d9d624158.png">
+
+You can further compare the pixels of each image with the function test-pixels. It reveives the path of the image and the number of items in the pixel lists you want to see
+
+```
+(test-pixels "data/dog.jpg" 5)
+
+```
+![image](https://user-images.githubusercontent.com/71990835/181812329-61f0836d-e7c3-4b69-9efd-2779e33f9bb6.png)
+
+
+And there you have it! If you followed the steps, you should have a scrambled image and an unscrambled image, in addition to the original. 
+
+
+
+
+
+
 
 
 

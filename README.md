@@ -39,6 +39,15 @@ The unscrambling process will be doing the same changing pixel values, but in a 
 
 ## Method
 
+### Libraries
+
+For the use of some functions dealing with images we need these two libraries: 
+
+```
+(require (planet dsheap/color-utils:1:3))
+(require 2htdp/image)
+```
+
 ### Main function 
 
 First, our program is used with the main function:
@@ -81,19 +90,24 @@ As for the RGB values, these are changed with the following functions:
 ```
 ; Scramble of reds
 (define (scramble-red img)
-  (for/image([old img])
-    (red+color (obscure-intensity (color-red old) 31)old)))
+  (if (image? img)
+    (for/image([old img])
+      (red+color (obscure-intensity (color-red old) 31) old))
+    (scramble-red (bitmap/file img))))
 
 ; Scramble of blues
 (define (scramble-blue img)
-  (for/image([old img])
-    (blue+color (obscure-intensity (color-blue old) 31)old)))
+  (if (image? img)
+    (for/image([old img])
+      (blue+color (obscure-intensity (color-blue old) 31) old))
+    (scramble-blue (bitmap/file img))))
 
 ; Scramble of greens
 (define (scramble-green img)
-  (for/image([old img])
-    (green+color (obscure-intensity (color-green old) 31)old)))
-    
+  (if (image? img)
+    (for/image([old img])
+      (green+color (obscure-intensity (color-green old) 31) old))
+    (scramble-green (bitmap/file img))))
 ```
 
 For each color in our image, we change the redness of the old image by obscuring it´s intensity, basically multiplying its intensity by 31 and then taking the remainder modulo of 257. 
@@ -102,10 +116,11 @@ This process is done for each color in our image (Red-Green-Blue). Each function
 These functions are called by our do_scramble function: 
 
 ```
-
 ; Function that does all the scramble
 (define (do_scramble img)
-  (scramble-green (scramble-red (scramble-blue img))))
+  (if (image? img)
+    (scramble-green (scramble-red (scramble-blue img)))
+    (do_scramble (bitmap/file img))))
 
 ```
 
@@ -119,18 +134,24 @@ To unscramble an image, we use the following functions:
 ```
 ; Unscramble of blues
 (define (unscramble-blue img)
-  (for/image([old img])
-    (blue+color (obscure-intensity (color-blue old) 199)old)))
+  (if (image? img)
+    (for/image([old img])
+      (blue+color (obscure-intensity (color-blue old) 199) old))
+    (unscramble-blue (bitmap/file img))))
 
 ; Unscramble of reds
 (define (unscramble-red img)
-  (for/image([old img])
-    (red+color (obscure-intensity (color-red old) 199)old)))
+  (if (image? img)
+    (for/image([old img])
+      (red+color (obscure-intensity (color-red old) 199) old))
+    (unscramble-red (bitmap/file img))))
 
 ; Unscramble of greens
 (define (unscramble-green img)
-  (for/image([old img])
-    (green+color (obscure-intensity (color-green old) 199)old)))
+  (if (image? img)
+    (for/image([old img])
+      (green+color (obscure-intensity (color-green old) 199) old))
+    (unscramble-green (bitmap/file img))))
 ```
 
 Which are basically the reverse of the previous scramble functions. We begin with the last state of the image, and change the intensity of the blue color by multiplying it by 199. Then using the current state of the image nad changing the red color values, and so on. 
@@ -140,7 +161,9 @@ These functions are called by the do_unscramble function:
 ```
 ; Function that does all the unscramble
 (define (do_unscramble img)
-  (unscramble-green (unscramble-blue (unscramble-red img))))
+  (if (image? img)
+    (unscramble-green (unscramble-blue (unscramble-red img)))
+    (do_unscramble (bitmap/file img))))
 ```
 
 Which is called by our main function when needed. 

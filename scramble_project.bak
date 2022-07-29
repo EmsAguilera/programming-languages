@@ -12,7 +12,7 @@ Emmanuel Bautista
 (require 2htdp/image)
 
 (provide main do_scramble do_unscramble scramble-red scramble-blue scramble-green 
-   unscramble-green unscramble-red unscramble-blue mult-mod obscure-intensity test-pixels)
+   unscramble-green unscramble-red unscramble-blue mult-mod obscure-intensity)
 
 ; This main function receives the name of the image and a name in which it will be saved. 
 (define (main in-filename out-filename flag)
@@ -21,12 +21,6 @@ Emmanuel Bautista
       (save-image (do_scramble my-image) out-filename)
       (save-image (do_unscramble my-image) out-filename)))
 
-
-; This function receives an image and the amount 
-(define(test-pixels img size )
-  (define my-img (bitmap/file img))
-        (take (image->color-list my-img) size))
-       
 
 ; Function that does all the scramble
 (define (do_scramble img)

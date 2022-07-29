@@ -14,17 +14,19 @@ Emmanuel Bautista
 (provide main do_scramble do_unscramble scramble-red scramble-blue scramble-green 
    unscramble-green unscramble-red unscramble-blue mult-mod obscure-intensity)
 
+; This main function receives the name of the image and a name in which it will be saved. 
 (define (main in-filename out-filename flag)
   (define my-image (bitmap/file in-filename))
     (if (eq? flag #t)
       (save-image (do_scramble my-image) out-filename)
       (save-image (do_unscramble my-image) out-filename)))
 
-; Function that do all the scramble
+
+; Function that does all the scramble
 (define (do_scramble img)
   (scramble-green (scramble-red (scramble-blue img))))
 
-; Function that do all the unscramble
+; Function that does all the unscramble
 (define (do_unscramble img)
   (unscramble-green (unscramble-blue (unscramble-red img))))
 
@@ -58,6 +60,7 @@ Emmanuel Bautista
   (for/image([old img])
     (green+color (obscure-intensity (color-green old) 199)old)))
 
+; Operation functions 
 (define (mult-mod x y z)
   (remainder (* x y) z))
 

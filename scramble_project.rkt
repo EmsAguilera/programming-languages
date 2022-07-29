@@ -14,25 +14,28 @@ Emmanuel Bautista
 (provide main do_scramble do_unscramble scramble-red scramble-blue 
   scramble-green unscramble-green unscramble-red unscramble-blue test-pixels)
 
-; This main function receives the name of the image and a name in which it will be saved. 
+; This main function receives the route with name of the image and
+; a route in which it will be saved. 
 (define (main in-filename out-filename flag)
   (define my-image (bitmap/file in-filename))
     (if (eq? flag #t)
       (save-image (do_scramble my-image) out-filename)
       (save-image (do_unscramble my-image) out-filename)))
 
-; This function receives an image and the amount 
+; This function receives an image and the amount of elements to show in a list.
+; This function helps to test the main, comparing the colors of some pixels
+; in the images.
 (define (test-pixels img size)
   (define my-img (bitmap/file img))
     (take (image->color-list my-img) size))
 
-; Function that does all the scramble
+; Function that does all the scramble, calls the scrambles functions of RGB.
 (define (do_scramble img)
   (if (image? img)
     (scramble-green (scramble-red (scramble-blue img)))
     (do_scramble (bitmap/file img))))
 
-; Function that does all the unscramble
+; Function that does all the unscramble, calls the scrambles functions of RGB.
 (define (do_unscramble img)
   (if (image? img)
     (unscramble-green (unscramble-blue (unscramble-red img)))
